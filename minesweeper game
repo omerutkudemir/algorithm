@@ -1,0 +1,238 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+void create_arena(char arena[10][10], int n)
+{
+    int i, j;
+	
+    for(i = 0; i < n; i++)
+    {
+        for(j = 0; j < n; j++)
+        {
+            arena[i][j] = '-';
+            printf("%c  ", arena[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+void place_mines(char arena[10][10], int n)
+{
+    int A;
+    int difficulty;
+    printf("Choose a difficulty level from 1 to 4:\n\n");
+    printf("1 = 1/5 of total squares are mines\n");
+    printf("2 = 1/4 of total squares are mines\n");
+    printf("3 = 1/3 of total squares are mines\n");
+    printf("4 = 1/2 of total squares are mines\n");
+    scanf("%d", &difficulty);
+	
+    switch(difficulty)
+    {
+        case 1:
+            A = (n * n) / 5;
+            break;
+        case 2:
+            A = (n * n) / 4;
+            break;
+        case 3:
+            A = (n * n) / 3;
+            break;
+        case 4:
+            A = (n * n) / 2;
+            break;
+    }
+	
+    int i, j;
+	
+    srand(time(0));
+    srand(time(0));
+	
+    for(i = 0; i < A; i++)
+    {
+        arena[rand() % (n)][rand() % n] = '*';
+    }
+}
+
+void open_region(char arena[10][10], int n)
+{
+    int i, j, x, y;
+    char copy_arena[10][10];
+    int a, b;
+    char record[100][n][n];
+    int m = 0, k = 0, l = 0, h = 0;
+		
+    printf("Enter the coordinates of the region to open: ");
+    scanf("%d %d", &a, &b);
+    int t = a - 1, f = b - 1;
+	
+    if(arena[a][b] == '*')
+    {
+        printf("You hit a mine. You lost:\n");
+        for(i = 0; i < n; i++)
+        {
+            for(j = 0; j < n; j++)
+            {
+                printf("%c  ", arena[i][j]);
+            }
+            printf("\n");
+        }
+    }
+    else
+    {
+        int mine_count = 0;
+        int mine_count2 = 0;
+        int mine_count3 = 0;
+        int m = 0, g = 0, s = 0, d = 0, c = 0, z = 0, l = 0, k = 0, e = 0;
+        int q = 0;
+        int u = 0;
+        int p, v;
+		
+        for(i = 0; i < n; i++)
+        {
+            for(j = 0; j < n; j++)
+            {
+                copy_arena[i][j] = '-';
+            }
+        }	
+			
+        mine_count = 0;
+		
+        for(t = a - 1; t <= a + 1; t++)
+        {
+            for(f = b - 1; f <= b + 1; f++)
+            {
+                if(t >= 0 && t <= n && f >= 0 && f <= n && arena[t][f] == '*')
+                {		        			        	
+                    mine_count++;
+                }	
+            }
+        }
+		
+        if(mine_count == 0)
+        {
+            for(i = a; i < n; i++)
+            {
+                for(j = b; j < n; j++)
+                {
+                    if(arena[i][j] != '*' && i < n && j < n && i > -1 && j > -1)
+                    {
+                        copy_arena[i][j] = '+';
+                    }
+                    
+                    if(arena[i][j] == '*')
+                    {
+                        break;
+                    }
+                }		    
+            }
+			
+            for(x = a; x < n; x++)
+            {
+                for(y = b; y > -1; y--)
+                {
+                    if(arena[x][y] != '*' && x < n && y < n && x > -1 && y > -1)
+                    {
+                        copy_arena[x][y] = '+';
+                    }
+                    
+                    if(arena[x][y] == '*')
+                    {
+                        break;
+                    }
+                }		    
+            }
+			
+            for(q = a; q > -1; q--)
+            {
+                for(e = b; e < n; e++)
+                {
+                    if(arena[q][e] != '*' && q < n && e < n && q > -1 && e > -1)
+                    {
+                        copy_arena[q][e] = '+';
+                    }
+					
+                    if(arena[q][e] == '*')
+                    {
+                        break;
+                    }
+                }
+            }
+			
+            for(p = a; p > -1; p--)
+            {
+                for(v = b; v > -1; v--)
+                {
+                    if(arena[p][v] != '*' && p < n && v < n && p > -1 && v > -1)
+                    {
+                        copy_arena[p][v] = '+';
+                    }
+					
+                    if(arena[p][v] == '*')
+                    {
+                        break;
+                    }
+                }
+            }
+			
+            // Each '+' must have at least 3 adjacent '+' signs, otherwise convert them to '-'
+            int count = 0;
+            for(i = 0; i < n; i++)
+            {
+                count = 0;
+                for(j = 0; j < n; j++)
+                {
+                    if(copy_arena[i][j] == '+')
+                    {
+                        for(t = i - 1; t <= i + 1; t++)
+                        {
+                            for(f = j - 1; f <= j + 1; f++)
+                            {
+                                if(t == i && f == j)
+                                {
+                                    continue;
+                                }
+								
+                                count++;
+                            }
+                        }
+                        if(count < 3)
+                        {
+                            copy_arena[i][j] = '-';
+                        }
+                    }
+                }
+            }	
+        }
+					
+        snprintf(&copy_arena[a][b], 1, "%d", mine_count);
+		
+        for(i = 0; i < n; i++)
+        {
+            for(j = 0; j < n; j++)
+            {
+                printf("%c  ", copy_arena[i][j]);
+            }
+            printf("\n");
+        }
+		
+        open_region(arena, n);
+    }
+}
+
+int main()
+{
+    char arena[10][10];	
+    int n, control;
+    int i, j;
+	
+    printf("Enter the size of the arena: ");
+    scanf("%d", &n);
+	
+    create_arena(arena, n);
+    place_mines(arena, n);
+    open_region(arena, n);
+	
+    return 0;
+}
