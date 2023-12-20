@@ -24,7 +24,7 @@ int main()
 		printf("%c",*(cumle+i));
 	}
 	
-	
+	free(cumle)
 	
 	return 0;
 }
