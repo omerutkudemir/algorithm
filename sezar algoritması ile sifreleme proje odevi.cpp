@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-//ogrenci numaram : 222802070
-//anahtar 7 olur
+
 struct ogrenci
 {
      char birlesmis_ad[70];
@@ -31,7 +30,7 @@ void dosyaya_yazma(struct ogrenci *bilgi)
 	int i;
 	if(dosya==NULL)
 	{
-		printf("dosya kayıtlı degil");
+		printf("dosya kayÄ±tlÄ± degil");
 	}
 	else
 	{
